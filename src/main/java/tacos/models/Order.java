@@ -4,9 +4,14 @@ import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
 import javax.validation.constraints.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Data
 public class Order {
+
+    private Long id;
 
     @NotBlank(message="Name is required")
     private String name;
@@ -32,4 +37,20 @@ public class Order {
 
     @Digits(integer=3, fraction=0, message="Invalid CVV")
     private String ccCVV;
+
+    private Date placedAt;
+
+    private Date createdAt;
+
+    private Date updatedAt;
+
+    private List<Taco> tacos = new ArrayList<>();
+
+    public void addTaco(Taco taco) {
+        tacos.add(taco);
+    }
+
+    public List<Taco> getTacos() {
+        return tacos;
+    }
 }
