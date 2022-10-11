@@ -7,13 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import tacos.constants.IngredientType;
-import tacos.models.Ingredient;
-import tacos.models.Order;
-import tacos.models.Taco;
+import tacos.entities.Ingredient;
+import tacos.entities.Order;
+import tacos.entities.Taco;
 import tacos.repositories.IngredientRepository;
 import tacos.repositories.TacoRepository;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,8 @@ public class DesignTacoController {
     @GetMapping
     public String showDesignForm(Model model) {
 
-        List<Ingredient> ingredients = ingredientRepository.findAll();
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredientRepository.findAll().forEach(ingredients::add);
 
         IngredientType[] types = IngredientType.values();
         for (IngredientType type : types) {
@@ -58,12 +60,6 @@ public class DesignTacoController {
         log.info("taco: " + taco);
 
         if (errors.hasErrors()) {
-            List<Ingredient> ingredients = ingredientRepository.findAll();
-            IngredientType[] types = IngredientType.values();
-            for (IngredientType type : types) {
-                model.addAttribute(type.toString().toLowerCase(),
-                        filterByType(ingredients, type));
-            }
             return "design";
         }
 

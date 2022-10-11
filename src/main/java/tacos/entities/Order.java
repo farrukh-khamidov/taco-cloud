@@ -1,16 +1,22 @@
-package tacos.models;
+package tacos.entities;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
+import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class Order {
+@Entity
+@Table(name = "orders")
+public class Order implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
     @NotBlank(message="Name is required")
@@ -44,6 +50,7 @@ public class Order {
 
     private Date updatedAt;
 
+    @ManyToMany(targetEntity=Taco.class)
     private List<Taco> tacos = new ArrayList<>();
 
     public void addTaco(Taco taco) {
@@ -52,5 +59,17 @@ public class Order {
 
     public List<Taco> getTacos() {
         return tacos;
+    }
+
+    @PrePersist
+    void createdAt() {
+        this.updatedAt = new Date();
+        this.placedAt = new Date();
+        this.createdAt = new Date();
+    }
+
+    @PreUpdate
+    void updatedAt() {
+        this.updatedAt = new Date();
     }
 }
