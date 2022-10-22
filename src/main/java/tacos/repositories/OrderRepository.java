@@ -1,11 +1,11 @@
 package tacos.repositories;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import tacos.entities.Order;
 
 import java.util.Date;
 import java.util.List;
-public interface OrderRepository extends CrudRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllByZip(String zip);
     List<Order> findAllByZipAndPlacedAtBetween(String zip, Date startDate, Date endDate);
 
