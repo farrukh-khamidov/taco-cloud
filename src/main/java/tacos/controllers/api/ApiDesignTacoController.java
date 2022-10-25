@@ -3,6 +3,10 @@ package tacos.controllers.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.LinkRelation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,7 +45,14 @@ public class ApiDesignTacoController {
     public List<Taco> recentTacos() {
         PageRequest page = PageRequest.of(
                 0, 12, Sort.by("createdAt").descending());
-        return tacoRepository.findAll(page).getContent();
+
+
+
+        List<Taco> tacos = tacoRepository.findAll(page).getContent();
+        CollectionModel<EntityModel<Taco>> recentResources = CollectionModel.wrap(tacos);
+        recentResources.add(
+                new Link("http://localhost:8080/design/recent", LinkRelation.of("recents")));
+        return recentResources;
     }
 
     @PostMapping
