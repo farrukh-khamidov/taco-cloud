@@ -7,10 +7,14 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import tacos.assemblers.TacoModelAssembler;
+import tacos.controllers.DesignTacoController;
+import tacos.dto.TacoModel;
 import tacos.entities.Taco;
 import tacos.repositories.TacoRepository;
 
@@ -42,16 +46,18 @@ public class ApiDesignTacoController {
     }
 
     @GetMapping("/recent")
-    public List<Taco> recentTacos() {
+    public CollectionModel<TacoModel> recentTacos() {
         PageRequest page = PageRequest.of(
                 0, 12, Sort.by("createdAt").descending());
 
 
 
         List<Taco> tacos = tacoRepository.findAll(page).getContent();
-        CollectionModel<EntityModel<Taco>> recentResources = CollectionModel.wrap(tacos);
-        recentResources.add(
-                new Link("http://localhost:8080/design/recent", LinkRelation.of("recents")));
+        CollectionModel<TacoModel> recentResources = new TacoModelAssembler().toCollectionModel(tacos);
+        recentResources.add(WebMvcLinkBuilder.linkTo(ApiDesignTacoController.class)
+                .slash("recent")
+                .withRel("recents"));
+
         return recentResources;
     }
 
