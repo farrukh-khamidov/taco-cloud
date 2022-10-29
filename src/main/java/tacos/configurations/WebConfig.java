@@ -2,6 +2,7 @@ package tacos.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.rest.webmvc.RepositoryLinksResource;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Links;
@@ -22,10 +23,11 @@ public class WebConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
 
         registry.addViewController("/").setViewName("home");
+        registry.addViewController("/login");
     }
 
     @Bean
-    public RepresentationModelProcessor<PagedModel<EntityModel<Taco>>> tacoProcessor(EntityLinks links) {
+    public RepresentationModelProcessor<RepositoryLinksResource> tacoProcessor(EntityLinks links) {
         return model -> {
             model.add(
                     links.linkFor(Taco.class)
