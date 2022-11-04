@@ -44,6 +44,9 @@ public class Order implements Serializable {
     @Digits(integer=3, fraction=0, message="Invalid CVV")
     private String ccCVV;
 
+    @ManyToOne
+    private User user;
+
     private Date placedAt;
 
     private Date createdAt;
