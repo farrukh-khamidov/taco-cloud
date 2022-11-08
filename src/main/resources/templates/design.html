@@ -10,7 +10,7 @@
 <img th:src="@{/images/taco.jpg}"/>
 
 
-<form method="POST" th:object="${taco}">
+<form method="POST" th:action="@{/design}" th:object="${taco}">
     <div class="grid">
 
         <div class="ingredient-group" id="wraps">
